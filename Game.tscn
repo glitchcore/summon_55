@@ -19,7 +19,7 @@ stretch_mode = 2
 [node name="Label" parent="." instance=ExtResource( 3 )]
 
 [node name="Man" parent="." instance=ExtResource( 4 )]
-position = Vector2( 624, 208 )
+position = Vector2( 625, 208 )
 
 [node name="Player" parent="." instance=ExtResource( 2 )]
 position = Vector2( 235, 278 )
