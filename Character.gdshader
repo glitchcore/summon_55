@@ -1,55 +1,121 @@
 shader_type canvas_item;
 
-float hash(vec2 p) {
-    return fract(sin(dot(p, vec2(12.9898,78.233))) * 43758.5453123); 
+/* discontinuous pseudorandom uniformly distributed in [-0.5, +0.5]^3 */
+vec3 random3(vec3 c) {
+	float j = 4096.0*sin(dot(c,vec3(17.0, 59.4, 15.0)));
+	vec3 r;
+	r.z = fract(512.0*j);
+	j *= .125;
+	r.x = fract(512.0*j);
+	j *= .125;
+	r.y = fract(512.0*j);
+	return r-0.5;
 }
 
-float _noise(vec2 x) {
-    vec2 p = floor(x);
-    vec2 f = fract(x);
-    f = f * f * (3.0 - 2.0 * f);
-    vec2 a = vec2(1.0, 0.0);
-    return mix(mix(hash(p + a.yy), hash(p + a.xy), f.x), mix(hash(p + a.yx), hash(p + a.xx), f.x), f.y);
+/* skew constants for 3d simplex functions */
+const float F3 =  0.3333333;
+const float G3 =  0.1666667;
+
+/* 3d simplex noise */
+float _noise(vec3 p) {
+	 /* 1. find current tetrahedron T and it's four vertices */
+	 /* s, s+i1, s+i2, s+1.0 - absolute skewed (integer) coordinates of T vertices */
+	 /* x, x1, x2, x3 - unskewed coordinates of p relative to each of T vertices*/
+	 
+	 /* calculate s and x */
+	 vec3 s = floor(p + dot(p, vec3(F3)));
+	 vec3 x = p - s + dot(s, vec3(G3));
+	 
+	 /* calculate i1 and i2 */
+	 vec3 e = step(vec3(0.0), x - x.yzx);
+	 vec3 i1 = e*(1.0 - e.zxy);
+	 vec3 i2 = 1.0 - e.zxy*(1.0 - e);
+	 	
+	 /* x1, x2, x3 */
+	 vec3 x1 = x - i1 + G3;
+	 vec3 x2 = x - i2 + 2.0*G3;
+	 vec3 x3 = x - 1.0 + 3.0*G3;
+	 
+	 /* 2. find four surflets and store them in d */
+	 vec4 w, d;
+	 
+	 /* calculate surflet weights */
+	 w.x = dot(x, x);
+	 w.y = dot(x1, x1);
+	 w.z = dot(x2, x2);
+	 w.w = dot(x3, x3);
+	 
+	 /* w fades from 0.6 at the center of the surflet to 0.0 at the margin */
+	 w = max(0.6 - w, 0.0);
+	 
+	 /* calculate surflet components */
+	 d.x = dot(random3(s), x);
+	 d.y = dot(random3(s + i1), x1);
+	 d.z = dot(random3(s + i2), x2);
+	 d.w = dot(random3(s + 1.0), x3);
+	 
+	 /* multiply d by w^4 */
+	 w *= w;
+	 w *= w;
+	 d *= w;
+	 
+	 /* 3. return the sum of the four surflets */
+	 return dot(d, vec4(52.0));
 }
+
+vec3 _hsv2rgb(vec3 c) {
+    vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
+    vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
+    return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
+}
+
 
 const vec3 RED = vec3(1., 0., 0.);
 const vec3 GREEN = vec3(0., 1., 0.);
 const vec3 WHITE = vec3(1.);
 const vec3 BG = vec3(0.9);
+const vec3 BLACK = vec3(0.);
+
+uniform vec2 frame_size;
+uniform vec2 sprite_sheet_size;
+uniform float time_seed;
+uniform vec3 color_1;
+uniform vec3 color_2;
+uniform float thickness;
+uniform float expand;
 
 vec4 fire(vec2 uv, float t, vec3 texture) {
     vec4 res;
     
-    float cloud_mask = texture.b; // clamp(1. - length(uv * 2.) + 0.2, 0., 1.);
+    float cloud_mask = texture.b + 
+		smoothstep(0.3, 0.8, 1. - length((uv - 0.5) * 1.2));
 	
-	float cloud =
-	    _noise(vec2(length(uv) * 6. + vec2(-t * 2., 0.))) * 
-	    _noise(vec2(uv * 3. + vec2(0, -t * 2.)));
-	float hard_cloud = clamp(cloud * 2., 0., 1.);
-	float soft_cloud = clamp(cloud * 1., 0., 1.) * cloud_mask;
+	float cloud = _noise(vec3(uv * 4., t * 0.7));
+	float cloud_v = abs(cloud);
 	
-	float inner = texture.g > 0.7 ? 1. : 0.;
-	float outer = texture.r < 0.7 ? 1. : 0.;
+	vec3 color = cloud > 0. ? color_1 : color_2;
+	
+	if(length(color) < 0.01) {
+		cloud_v = 0.;
+	}
+	
+	float hard_cloud = clamp(cloud_v * 2., 0., 1.);
+	float soft_cloud = clamp(cloud_v * 1.5, 0., 1.) * cloud_mask;
+	
+	float inner = smoothstep(0.5, 0.9, texture.g);
+	float outer = 1. - smoothstep(thickness, 0.85, texture.r);
 	
 	float contour = texture.g * (1. - inner);
 	
 	res.a = max(outer, soft_cloud);
 	
-	if(outer > 0.) {
-	    res.rgb = max(vec3(inner), hard_cloud * GREEN);
-	} else {
-	    res.rgb = GREEN;
-	}
+	res.rgb = mix(color, max(vec3(inner), hard_cloud * color), outer);
 	
-	// res.a = 1.;
-	// res.rgb = cloud * RED;
+    // res.a = 1.;
+	// res.rgb = soft_cloud * color;
 	
 	return res;
 }
-
-uniform vec2 frame_size;
-uniform vec2 sprite_sheet_size;
-uniform float time_seed;
 
 void fragment() {
 	vec2 current_point = sprite_sheet_size * UV;

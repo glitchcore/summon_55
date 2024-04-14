@@ -7,6 +7,7 @@ var target_position = Vector2()
 func _ready() -> void:
 	target_position = position
 	$Character/PlayerAnimator.play("Idle")
+	$Character/Sprite.material.set_shader_param("thickness", 0.8)
 
 func _process(delta: float) -> void:
 	var is_moving = false

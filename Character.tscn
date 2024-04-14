@@ -71,14 +71,18 @@ tracks/0/keys = {
 }
 
 [sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 42, 48.25 )
+extents = Vector2( 66, 77.5 )
 
 [sub_resource type="ShaderMaterial" id=8]
 resource_local_to_scene = true
 shader = ExtResource( 3 )
-shader_param/frame_size = null
-shader_param/sprite_sheet_size = null
+shader_param/frame_size = Vector2( 800, 800 )
+shader_param/sprite_sheet_size = Vector2( 2400, 3200 )
 shader_param/time_seed = null
+shader_param/color_1 = Vector3( 0, 0, 0 )
+shader_param/color_2 = Vector3( 0, 1, 0 )
+shader_param/thickness = 0.5
+shader_param/expand = null
 
 [node name="Character" type="KinematicBody2D"]
 position = Vector2( 8, -96 )
@@ -91,17 +95,17 @@ anims/ToWalk = SubResource( 4 )
 anims/Walk = SubResource( 6 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2( -10, 97 )
+position = Vector2( -13, 96.5 )
 shape = SubResource( 1 )
 
 [node name="Sprite" type="Sprite" parent="."]
 material = SubResource( 8 )
 position = Vector2( -8, 96 )
-scale = Vector2( 0.5, 0.5 )
+scale = Vector2( 0.8, 0.8 )
 texture = ExtResource( 2 )
 hframes = 3
 vframes = 4
-frame = 6
+frame = 2
 script = ExtResource( 1 )
 __meta__ = {
 "_editor_description_": ""

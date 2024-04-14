@@ -10,6 +10,7 @@
 script = ExtResource( 5 )
 
 [node name="Ground" type="TextureRect" parent="."]
+modulate = Color( 0.737255, 0.737255, 0.737255, 1 )
 margin_left = -390.0
 margin_top = -259.0
 margin_right = 2205.0
@@ -27,7 +28,7 @@ position = Vector2( 235, 278 )
 position = Vector2( 625, 208 )
 
 [node name="People" type="Node2D" parent="."]
-visible = false
+process_priority = -1
 
 [node name="Man2" parent="People" instance=ExtResource( 4 )]
 position = Vector2( 142, 262 )
