@@ -20,8 +20,67 @@ stretch_mode = 2
 
 [node name="Label" parent="." instance=ExtResource( 3 )]
 
-[node name="Man" parent="." instance=ExtResource( 4 )]
-position = Vector2( 625, 208 )
-
 [node name="Player" parent="." instance=ExtResource( 2 )]
 position = Vector2( 235, 278 )
+
+[node name="People" type="Node2D" parent="."]
+
+[node name="Man" parent="People" instance=ExtResource( 4 )]
+position = Vector2( 625, 208 )
+
+[node name="Man2" parent="People" instance=ExtResource( 4 )]
+position = Vector2( 142, 262 )
+
+[node name="Man3" parent="People" instance=ExtResource( 4 )]
+position = Vector2( 541, 216 )
+
+[node name="Man4" parent="People" instance=ExtResource( 4 )]
+position = Vector2( 104, 110 )
+
+[node name="Man5" parent="People" instance=ExtResource( 4 )]
+position = Vector2( 617, 107 )
+
+[node name="Man6" parent="People" instance=ExtResource( 4 )]
+position = Vector2( 114, 458 )
+
+[node name="Man7" parent="People" instance=ExtResource( 4 )]
+position = Vector2( 852, 246 )
+
+[node name="Man8" parent="People" instance=ExtResource( 4 )]
+position = Vector2( 384, 500 )
+
+[node name="Man9" parent="People" instance=ExtResource( 4 )]
+position = Vector2( 660, 523 )
+
+[node name="Man10" parent="People" instance=ExtResource( 4 )]
+position = Vector2( 240, 492 )
+
+[node name="Man11" parent="People" instance=ExtResource( 4 )]
+position = Vector2( 635, 393 )
+
+[node name="Man12" parent="People" instance=ExtResource( 4 )]
+position = Vector2( 391, 377 )
+
+[node name="Man13" parent="People" instance=ExtResource( 4 )]
+position = Vector2( 243, 62 )
+
+[node name="Man14" parent="People" instance=ExtResource( 4 )]
+position = Vector2( 33, 491 )
+
+[node name="Man15" parent="People" instance=ExtResource( 4 )]
+position = Vector2( 480, 326 )
+
+[node name="Man16" parent="People" instance=ExtResource( 4 )]
+position = Vector2( 477, 105 )
+
+[node name="Man17" parent="People" instance=ExtResource( 4 )]
+position = Vector2( 543, 498 )
+
+[node name="Man18" parent="People" instance=ExtResource( 4 )]
+position = Vector2( 376, 238 )
+
+[node name="Man19" parent="People" instance=ExtResource( 4 )]
+position = Vector2( 231, 410 )
+
+[node name="Man20" parent="People" instance=ExtResource( 4 )]
+position = Vector2( 321, 119 )

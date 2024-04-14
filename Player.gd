@@ -6,7 +6,7 @@ var target_position = Vector2()
 
 func _ready() -> void:
 	target_position = position
-	$Character/Sprite/PlayerAnimator.play("Idle")
+	$Character/PlayerAnimator.play("Idle")
 
 func _process(delta: float) -> void:
 	var is_moving = false
@@ -29,6 +29,6 @@ func _process(delta: float) -> void:
 		is_moving = true
 	
 	if is_moving:
-		$Character/Sprite/PlayerAnimator.play("Walk")
+		$Character/PlayerAnimator.play("Walk")
 	else:
-		$Character/Sprite/PlayerAnimator.play("Idle")
+		$Character/PlayerAnimator.play("Idle")
