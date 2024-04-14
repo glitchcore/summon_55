@@ -1,13 +1,12 @@
 extends Node2D
 
-enum State {IDLE, ZOOM_IN, ZOOMED, ZOOM_OUT}
+enum State {IDLE, ZOOM_IN, EXPANSION, CONTRACTION, ZOOM_OUT}
 
 export(float, EASE) var DAMP_EASING = 1.0
 export var duration = 0.3
 export var zoom_origin = 1
 export var zoom_amount = -0.5
 
-var state = State.IDLE
 onready var me = $Player
 onready var camera = $Player/Camera2
 onready var timer = $Timer
@@ -16,8 +15,11 @@ onready var label = $Label
 func _ready() -> void:
 	pass
 
+var state = State.IDLE
 var current_target
 var origin_bg_modulate
+var materials = Array()
+var actor = 0
 
 func enter_idle():
 	state = State.IDLE
@@ -30,6 +32,10 @@ func enter_zoom_in(target: Node2D):
 	state = State.ZOOM_IN
 	current_target = target
 	origin_bg_modulate = $Ground.modulate.a
+	materials = [
+		me.find_node("Character").find_node("Sprite").material,
+		current_target.find_node("Character").find_node("Sprite").material
+	]
 	
 	timer.set_wait_time(duration)
 	timer.start()
@@ -43,7 +49,33 @@ func handle_zoom_in():
 	
 	$Ground.modulate.a =  x * origin_bg_modulate
 func exit_zoom_in():
-	enter_zoomed()
+	enter_expansion()
+	
+func enter_expansion():
+	state = State.EXPANSION
+	timer.set_wait_time(1)
+	timer.start()
+	
+	materials[1 - actor].set_shader_param("expand", 1.0)
+	materials[1 - actor].set_shader_param("cloud_amount", 0.0)
+func handle_expansion():
+	var x = 1.0 - timer.time_left / timer.wait_time
+	materials[actor].set_shader_param("expand", x)
+	materials[actor].set_shader_param("cloud_amount", x)
+	materials[1 - actor].set_shader_param("cloud_amount", x)
+func exit_expansion():
+	enter_contraction()
+	
+func enter_contraction():
+	state = State.CONTRACTION
+	timer.set_wait_time(1)
+	timer.start()
+func handle_contraction():
+	var x = timer.time_left / timer.wait_time
+	materials[actor].set_shader_param("expand", x)
+	materials[1 - actor].set_shader_param("expand", x)
+func exit_contraction():
+	enter_zoom_out()
 
 func enter_zoom_out():
 	state = State.ZOOM_OUT
@@ -58,23 +90,16 @@ func handle_zoom_out():
 	$Ground.modulate.a =  (1.0 - x) * origin_bg_modulate
 func exit_zoom_out():
 	enter_idle()
-	
-func enter_zoomed():
-	state = State.ZOOMED
-	timer.set_wait_time(5)
-	timer.start()
-func handle_zoomed():
-	pass
-func exit_zoomed():
-	enter_zoom_out()
 
 func _process(delta: float) -> void:
 	if state == State.IDLE:
 		handle_idle()
 	elif state == State.ZOOM_IN:
 		handle_zoom_in()
-	elif state == State.ZOOMED:
-		handle_zoomed()
+	elif state == State.EXPANSION:
+		handle_expansion()
+	elif state == State.CONTRACTION:
+		handle_contraction()
 	elif state == State.ZOOM_OUT:
 		handle_zoom_out()
 
@@ -85,13 +110,14 @@ func on_PlayerCollide(target: Node):
 		if obj != target:
 			pass
 
-
 func _on_Timer_timeout() -> void:
 	if state == State.IDLE:
 		exit_idle()
 	elif state == State.ZOOM_IN:
 		exit_zoom_in()
-	elif state == State.ZOOMED:
-		exit_zoomed()
+	elif state == State.EXPANSION:
+		exit_expansion()
+	elif state == State.CONTRACTION:
+		exit_contraction()
 	elif state == State.ZOOM_OUT:
 		exit_zoom_out()

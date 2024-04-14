@@ -4,6 +4,8 @@ const SPEED = 250
 
 var target_position = Vector2()
 
+export(float) var expand = 0.0
+
 func _ready() -> void:
 	target_position = position
 	$Character/PlayerAnimator.play("Idle")

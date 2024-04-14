@@ -83,12 +83,13 @@ uniform vec3 color_1;
 uniform vec3 color_2;
 uniform float thickness;
 uniform float expand;
+uniform float cloud_amount;
 
 vec4 fire(vec2 uv, float t, vec3 texture) {
     vec4 res;
     
     float cloud_mask = texture.b + 
-		smoothstep(0.3, 0.8, 1. - length((uv - 0.5) * 1.2)) * expand;
+		smoothstep(0.3, 0.7, 1. - length((uv - 0.5) * 1.2 / (expand + 0.01))) * cloud_amount;
 	
 	float cloud = _noise(vec3(uv * 4., t * 0.7));
 	float cloud_v = abs(cloud);

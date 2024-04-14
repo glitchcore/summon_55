@@ -83,6 +83,7 @@ shader_param/color_1 = Vector3( 0, 0, 0 )
 shader_param/color_2 = Vector3( 0, 1, 0 )
 shader_param/thickness = 0.5
 shader_param/expand = null
+shader_param/cloud_amount = null
 
 [node name="Character" type="KinematicBody2D"]
 position = Vector2( 8, -96 )
