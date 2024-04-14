@@ -99,7 +99,7 @@ scale = Vector2( 0.5, 0.5 )
 texture = ExtResource( 2 )
 hframes = 3
 vframes = 4
-frame = 9
+frame = 7
 script = ExtResource( 1 )
 __meta__ = {
 "_editor_description_": ""
