@@ -22,7 +22,9 @@ vec4 fire(vec2 uv, float t, vec3 texture) {
     
     float cloud_mask = texture.b; // clamp(1. - length(uv * 2.) + 0.2, 0., 1.);
 	
-	float cloud = _noise(vec2(uv * 5. + vec2(t * 2., 0.))) * _noise(vec2(uv * 5. + vec2(0, t * 2.)));
+	float cloud =
+	    _noise(vec2(length(uv) * 6. + vec2(-t * 2., 0.))) * 
+	    _noise(vec2(uv * 3. + vec2(0, -t * 2.)));
 	float hard_cloud = clamp(cloud * 2., 0., 1.);
 	float soft_cloud = clamp(cloud * 1., 0., 1.) * cloud_mask;
 	
@@ -31,11 +33,6 @@ vec4 fire(vec2 uv, float t, vec3 texture) {
 	
 	float contour = texture.g * (1. - inner);
 	
-	// color = man > 0. ? texture.rgb : GREEN;
-	// alpha = man > 0. ? texture.a : bg;
-	
-	// color = texture.rgb;
-	// color.g = texture.g;
 	res.a = max(outer, soft_cloud);
 	
 	if(outer > 0.) {
@@ -44,11 +41,15 @@ vec4 fire(vec2 uv, float t, vec3 texture) {
 	    res.rgb = GREEN;
 	}
 	
+	// res.a = 1.;
+	// res.rgb = cloud * RED;
+	
 	return res;
 }
 
 uniform vec2 frame_size;
 uniform vec2 sprite_sheet_size;
+uniform float time_seed;
 
 void fragment() {
 	vec2 current_point = sprite_sheet_size * UV;
@@ -59,7 +60,7 @@ void fragment() {
 	
 	vec3 man = texture(TEXTURE, UV).rgb;
 	
-	vec4 res = fire(new_uv, TIME, man);
+	vec4 res = fire(new_uv, TIME + time_seed, man);
 	
 	COLOR.rgb = res.rgb;
 	COLOR.a = res.a;

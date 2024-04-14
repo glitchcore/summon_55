@@ -5,9 +5,10 @@ extends Sprite
 # var a: int = 2
 # var b: String = "text"
 
-
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	var rng = RandomNumberGenerator.new()
+	rng.randomize()
 	var sheet_columns = hframes
 	var sheet_rows = vframes
 	var sprite_sheet_width = texture.get_width()
@@ -22,6 +23,8 @@ func _ready() -> void:
 	
 	material.set_shader_param("frame_size", frame_size);
 	material.set_shader_param("sprite_sheet_size", sprite_sheet_size);
+	var time_seed = rng.randf_range(0.0, 1000.0)
+	material.set_shader_param("time_seed", time_seed)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta: float) -> void:

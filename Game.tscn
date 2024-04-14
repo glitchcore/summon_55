@@ -23,10 +23,11 @@ stretch_mode = 2
 [node name="Player" parent="." instance=ExtResource( 2 )]
 position = Vector2( 235, 278 )
 
-[node name="People" type="Node2D" parent="."]
-
-[node name="Man" parent="People" instance=ExtResource( 4 )]
+[node name="Man" parent="." instance=ExtResource( 4 )]
 position = Vector2( 625, 208 )
+
+[node name="People" type="Node2D" parent="."]
+visible = false
 
 [node name="Man2" parent="People" instance=ExtResource( 4 )]
 position = Vector2( 142, 262 )
