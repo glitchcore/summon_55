@@ -18,7 +18,7 @@ func _ready() -> void:
 		sprite_sheet_width/float(sheet_columns),
 		sprite_sheet_height/float(sheet_rows)
 	)
-
+	
 	var sprite_sheet_size = Vector2(sprite_sheet_width, sprite_sheet_height);
 	
 	material.set_shader_param("frame_size", frame_size);

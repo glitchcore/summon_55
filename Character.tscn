@@ -86,6 +86,7 @@ shader_param/expand = null
 
 [node name="Character" type="KinematicBody2D"]
 position = Vector2( 8, -96 )
+collision_layer = 2
 
 [node name="PlayerAnimator" type="AnimationPlayer" parent="."]
 root_node = NodePath("../Sprite")
