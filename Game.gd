@@ -39,10 +39,15 @@ func enter_zoom_in(target: Node2D):
 		current_target.find_node("Character").find_node("Sprite").material
 	]
 	
-	color_challenge = get_color_challenge(
+	var color_challenge_container = get_color_challenge(
 		me.find_node("Character").find_node("Sprite").call("get_colors"),
 		current_target.find_node("Character").find_node("Sprite").call("get_colors")
 	)
+	
+	color_challenge = color_challenge_container[0]
+	
+	if color_challenge_container[1]:
+		current_target.call("on_set_owned", true)
 	
 	timer.set_wait_time(duration)
 	timer.start()
@@ -149,14 +154,21 @@ func _on_Timer_timeout() -> void:
 func get_color_challenge(a, b):
 	var res = Array()
 	
+	var a_count = 0
+	var b_count = 0
+	
 	print(a, " ", b)
 	for x in a:
 		if b.find(x) == -1:
 			res.append([0, x])
+			a_count += 1
 	
 	for x in b:
 		if a.find(x) == -1:
 			res.append([1, x])
+			b_count += 1
+			
+	var owned = a_count > b_count
 	
 	res.shuffle()
-	return res
+	return [res, owned]

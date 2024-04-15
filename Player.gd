@@ -1,10 +1,9 @@
 extends Node2D
 
-const SPEED = 250
+export(float) var speed = 250
+export(float) var expand = 0.0
 
 var target_position = Vector2()
-
-export(float) var expand = 0.0
 
 export(Array, int) var init_colors = []
 
@@ -22,7 +21,7 @@ func _process(delta: float) -> void:
 	# handle keyboard movement
 	var input = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
 	if input.length() > 0:
-		position += input * SPEED * delta
+		position += input * speed * delta
 		target_position = position
 		is_moving = true
 	
@@ -34,7 +33,7 @@ func _process(delta: float) -> void:
 	
 	# handle mouse movement
 	if position.distance_to(target_position) > 10:
-		position += (target_position - position).normalized() * SPEED * delta
+		position += (target_position - position).normalized() * speed * delta
 		is_moving = true
 	
 	if is_moving:
