@@ -7,6 +7,9 @@ var target_position = Vector2()
 
 export(Array, int) var init_colors = []
 
+var request_audio = true
+onready var beat_timer = get_node("/root/Game/Beat") as Node
+
 func _ready() -> void:
 	target_position = position
 	$Character/PlayerAnimator.play("Idle")
@@ -15,6 +18,13 @@ func _ready() -> void:
 	for color in init_colors:
 		if $Character/Sprite.colors.find(color) == -1:
 			$Character/Sprite.colors.append(color)
+			
+	beat_timer.connect("timeout", self, "on_BeatTimeout")
+
+func on_BeatTimeout():
+	if request_audio:
+		request_audio = false
+		$Character/BaseAudio.play(0.0)
 
 func _process(delta: float) -> void:
 	var is_moving = false

@@ -23,6 +23,7 @@ onready var label_container = $LabelContainer
 
 var state = State.IDLE
 var current_target
+var another_targets = Array()
 var origin_bg_modulate
 var materials = Array()
 var color_challenge = Array()
@@ -97,6 +98,9 @@ func handle_zoom_in():
 	camera.zoom = Vector2(zoom, zoom)
 	
 	$Ground.modulate.a =  x * origin_bg_modulate
+	for another in another_targets:
+		another.modulate.a = x * origin_bg_modulate
+
 func exit_zoom_in():
 	enter_exposition()
 
@@ -184,6 +188,8 @@ func handle_zoom_out():
 	camera.zoom = Vector2(zoom, zoom)
 	
 	$Ground.modulate.a =  (1.0 - x) * origin_bg_modulate
+	for another in another_targets:
+		another.modulate.a = 1.0 - x
 func exit_zoom_out():
 	enter_idle()
 
@@ -213,9 +219,10 @@ func on_PlayerCollide(target: Node):
 	if state == State.IDLE:
 		exit_idle()
 	
+	another_targets = Array()
 	for obj in $Y.get_children():
-		if obj != target:
-			pass
+		if obj != target and obj != $Y/Player:
+			another_targets.append(obj)
 
 func _on_Timer_timeout() -> void:
 	if state == State.IDLE:

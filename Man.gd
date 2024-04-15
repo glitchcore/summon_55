@@ -7,10 +7,12 @@ export(float) var follow_range = 100
 onready var game = get_node("/root/Game") as Node
 onready var player = get_node("/root/Game/Y/Player") as Node2D
 onready var rng = RandomNumberGenerator.new()
+onready var beat_timer = get_node("/root/Game/Beat") as Node
 
 var is_moving = false
 var is_owned = false
 var move_offset = Vector2()
+var request_audio = false
 
 func _ready() -> void:
 	rng.randomize()
@@ -27,6 +29,12 @@ func _ready() -> void:
 	for color in init_colors:
 		if $Character/Sprite.colors.find(color) == -1:
 			$Character/Sprite.colors.append(color)
+	beat_timer.connect("timeout", self, "on_BeatTimeout")
+
+func on_BeatTimeout():
+	if request_audio:
+		request_audio = false
+		$Character/BaseAudio.play(0.0)
 
 func _process(delta: float) -> void:
 	if not is_owned:
@@ -59,3 +67,6 @@ func _on_Area2D_body_entered(body: Node) -> void:
 	
 func on_set_owned(value: bool):
 	is_owned = value
+	
+	if is_owned:
+		request_audio = true

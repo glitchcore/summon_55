@@ -40,6 +40,10 @@ limit_bottom = 2100
 drag_margin_h_enabled = true
 drag_margin_v_enabled = true
 smoothing_enabled = true
+drag_margin_left = 0.0
+drag_margin_top = 0.0
+drag_margin_right = 0.0
+drag_margin_bottom = 0.0
 editor_draw_limits = true
 
 [node name="Man" parent="Y" instance=ExtResource( 4 )]
@@ -72,5 +76,9 @@ custom_fonts/font = SubResource( 1 )
 align = 1
 valign = 1
 autowrap = true
+
+[node name="Beat" type="Timer" parent="."]
+wait_time = 0.6
+autostart = true
 
 [connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
