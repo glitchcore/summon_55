@@ -5,7 +5,7 @@ export(float) var speed = 200
 export(float) var follow_range = 100
 
 onready var game = get_node("/root/Game") as Node
-onready var player = get_node("/root/Game/Player") as Node2D
+onready var player = get_node("/root/Game/Y/Player") as Node2D
 onready var rng = RandomNumberGenerator.new()
 
 var is_moving = false

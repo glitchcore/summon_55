@@ -1,8 +1,7 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://sprites/tile.png" type="Texture" id=1]
 [ext_resource path="res://Player.tscn" type="PackedScene" id=2]
-[ext_resource path="res://LabelNode.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Man.tscn" type="PackedScene" id=4]
 [ext_resource path="res://Game.gd" type="Script" id=5]
 
@@ -12,7 +11,7 @@ EXPAND_EASING = 0.196146
 AMOUNT_EASING = 4.75683
 
 [node name="Ground" type="TextureRect" parent="."]
-modulate = Color( 0.168627, 0.168627, 0.168627, 1 )
+modulate = Color( 0.6, 0.6, 0.6, 1 )
 margin_left = -390.0
 margin_top = -259.0
 margin_right = 2205.0
@@ -21,12 +20,12 @@ texture = ExtResource( 1 )
 expand = true
 stretch_mode = 2
 
-[node name="Label" parent="." instance=ExtResource( 3 )]
+[node name="Y" type="YSort" parent="."]
 
-[node name="Player" parent="." instance=ExtResource( 2 )]
+[node name="Player" parent="Y" instance=ExtResource( 2 )]
 position = Vector2( 235, 278 )
 
-[node name="Camera2" type="Camera2D" parent="Player"]
+[node name="Camera2" type="Camera2D" parent="Y/Player"]
 current = true
 limit_left = -350
 limit_top = -100
@@ -37,26 +36,33 @@ drag_margin_v_enabled = true
 smoothing_enabled = true
 editor_draw_limits = true
 
-[node name="People" type="Node2D" parent="."]
-process_priority = -1
-
-[node name="Man" parent="People" instance=ExtResource( 4 )]
+[node name="Man" parent="Y" instance=ExtResource( 4 )]
 position = Vector2( 625, 208 )
 init_colors = [ 1 ]
 
-[node name="Man2" parent="People" instance=ExtResource( 4 )]
+[node name="Man2" parent="Y" instance=ExtResource( 4 )]
 position = Vector2( 968, 157 )
 init_colors = [ 2 ]
 
-[node name="Man3" parent="People" instance=ExtResource( 4 )]
+[node name="Man3" parent="Y" instance=ExtResource( 4 )]
 position = Vector2( 245, 820 )
 init_colors = [ 3 ]
 
-[node name="Man4" parent="People" instance=ExtResource( 4 )]
+[node name="Man4" parent="Y" instance=ExtResource( 4 )]
 position = Vector2( 837, 783 )
 init_colors = [ 1, 4 ]
 
 [node name="Timer" type="Timer" parent="."]
 one_shot = true
+
+[node name="LabelContainer" type="Node2D" parent="."]
+
+[node name="Label" type="Label" parent="LabelContainer"]
+margin_left = -20.0
+margin_top = -7.0
+margin_right = 20.0
+margin_bottom = 7.0
+align = 1
+valign = 1
 
 [connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
