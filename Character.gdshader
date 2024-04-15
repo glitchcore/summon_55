@@ -89,7 +89,7 @@ vec4 fire(vec2 uv, float t, vec3 texture) {
     vec4 res;
     
     float cloud_mask = texture.b + 
-		smoothstep(0.3, 0.7, 1. - length((uv - 0.5) * 1.2 / (expand + 0.01))) * cloud_amount;
+		smoothstep(0.3, 0.7, 1. - length((uv - 0.5) * 1.5 / (expand + 0.01))) * cloud_amount;
 	
 	float cloud = _noise(vec3(uv * 4., t * 0.7));
 	float cloud_v = abs(cloud);
@@ -100,8 +100,8 @@ vec4 fire(vec2 uv, float t, vec3 texture) {
 		cloud_v = 0.;
 	}
 	
-	float hard_cloud = clamp(cloud_v * 2., 0., 1.);
-	float soft_cloud = clamp(cloud_v * 1.5, 0., 1.) * cloud_mask;
+	float hard_cloud = clamp(cloud_v * 2., 0., 1.) * cloud_amount;
+	float soft_cloud = clamp(cloud_v * 1.5, 0., 1.) * cloud_mask * cloud_amount;
 	
 	float inner = smoothstep(0.5, 0.9, texture.g);
 	float outer = 1. - smoothstep(thickness, 0.85, texture.r);

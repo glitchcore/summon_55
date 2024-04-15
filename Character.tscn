@@ -107,8 +107,14 @@ scale = Vector2( 0.8, 0.8 )
 texture = ExtResource( 2 )
 hframes = 3
 vframes = 4
-frame = 2
+frame = 5
 script = ExtResource( 1 )
 __meta__ = {
 "_editor_description_": ""
 }
+
+[node name="ColorChanger" type="Timer" parent="Sprite"]
+wait_time = 2.0
+autostart = true
+
+[connection signal="timeout" from="Sprite/ColorChanger" to="Sprite" method="_on_ColorChanger_timeout"]

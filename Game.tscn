@@ -8,10 +8,11 @@
 
 [node name="Game" type="Node2D"]
 script = ExtResource( 5 )
-DAMP_EASING = 0.482968
+EXPAND_EASING = 0.196146
+AMOUNT_EASING = 4.75683
 
 [node name="Ground" type="TextureRect" parent="."]
-modulate = Color( 0.737255, 0.737255, 0.737255, 1 )
+modulate = Color( 0.168627, 0.168627, 0.168627, 1 )
 margin_left = -390.0
 margin_top = -259.0
 margin_right = 2205.0
@@ -41,6 +42,19 @@ process_priority = -1
 
 [node name="Man" parent="People" instance=ExtResource( 4 )]
 position = Vector2( 625, 208 )
+init_colors = [ 1 ]
+
+[node name="Man2" parent="People" instance=ExtResource( 4 )]
+position = Vector2( 968, 157 )
+init_colors = [ 2 ]
+
+[node name="Man3" parent="People" instance=ExtResource( 4 )]
+position = Vector2( 245, 820 )
+init_colors = [ 3 ]
+
+[node name="Man4" parent="People" instance=ExtResource( 4 )]
+position = Vector2( 837, 783 )
+init_colors = [ 1, 4 ]
 
 [node name="Timer" type="Timer" parent="."]
 one_shot = true

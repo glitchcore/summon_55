@@ -6,10 +6,16 @@ var target_position = Vector2()
 
 export(float) var expand = 0.0
 
+export(Array, int) var init_colors = []
+
 func _ready() -> void:
 	target_position = position
 	$Character/PlayerAnimator.play("Idle")
 	$Character/Sprite.material.set_shader_param("thickness", 0.8)
+	
+	for color in init_colors:
+		if $Character/Sprite.colors.find(color) == -1:
+			$Character/Sprite.colors.append(color)
 
 func _process(delta: float) -> void:
 	var is_moving = false
@@ -35,3 +41,7 @@ func _process(delta: float) -> void:
 		$Character/PlayerAnimator.play("Walk")
 	else:
 		$Character/PlayerAnimator.play("Idle")
+		
+func on_PlayerCollide():
+	# stop on collide
+	target_position = position
