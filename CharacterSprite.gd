@@ -54,6 +54,9 @@ func on_add_color(color: int):
 	if colors.find(color) == -1:
 		colors.append(color)
 
+func resolve_color(id):
+	return COLORS[id]
+
 func get_colors():
 	return colors
 

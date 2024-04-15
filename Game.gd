@@ -28,6 +28,29 @@ var materials = Array()
 var color_challenge = Array()
 var is_owned = false
 
+const LYRICS = [
+	"Behold the secrets whispered by the cosmos",
+	"You are the only person to ever get this message",
+	"You look tired",
+	"Extreme fear can neither fight nor fly",
+	"Never look up when dragons fly overhead",
+	"You will soon forget this",
+	"Your aims are high, and you are capable of much",
+	"Beware of a tall black man with one blond shoe",
+	"Among the lucky, you are the chosen one",
+	"The better part of valor is discretion",
+	"Permit me to guide you through the labyrinth of the mind.",
+	"I hold a beacon of truth in the shadows of ignorance.",
+	"Come, let the veils of mystery be lifted.",
+	"You love your home and want it to be beautiful",
+	"Step closer and receive the gift of sacred insight",
+	"Expect the worst, it's the least you can do",
+	"You will contract a rare disease",
+	"May this knowledge bloom within you like a sacred flower",
+	"Don't feed the bats tonight",
+	"Don't worry so loud, your roommate can't think",
+]
+
 func handle_default():
 	pass
 
@@ -80,12 +103,24 @@ func exit_zoom_in():
 func enter_exposition():
 	state = State.EXPOSITION
 	
-	var actor = color_challenge[0][0]
+	var actor = Vector2()
+	if color_challenge[0][0] == 0:
+		actor = me
+	else:
+		actor = current_target
+	var color = color_challenge[0][1]
+	
+	me.find_node("Character").find_node("Sprite").call("on_add_color", color)
+	current_target.find_node("Character").find_node("Sprite").call("on_add_color", color)
+	
+	var actor_id = color_challenge[0][0]
+	materials[1 - actor_id].set_shader_param("expand", 1.0)
+	materials[1 - actor_id].set_shader_param("cloud_amount", 0.0)
 	
 	label.visible = true
-	label_container.position = \
-		(current_target.position + me.position) / 2 + Vector2(0.0, -100.0)
-	label.text = "let's try to explore you"
+	label.modulate = actor.find_node("Character").find_node("Sprite").call("resolve_color", color_challenge[0][1])
+	label_container.position = actor.position + Vector2(0.0, -150.0)
+	label.text = LYRICS[randi() % LYRICS.size()]
 	
 	timer.set_wait_time(exposition_time)
 	timer.start()
@@ -95,14 +130,6 @@ func exit_exposition():
 
 func enter_expansion():
 	state = State.EXPANSION
-	
-	var actor = color_challenge[0][0]
-	var color = color_challenge[0][1]
-	materials[1 - actor].set_shader_param("expand", 1.0)
-	materials[1 - actor].set_shader_param("cloud_amount", 0.0)
-	
-	me.find_node("Character").find_node("Sprite").call("on_add_color", color)
-	current_target.find_node("Character").find_node("Sprite").call("on_add_color", color)
 	
 	timer.set_wait_time(expand_time)
 	timer.start()
