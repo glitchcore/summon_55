@@ -157,7 +157,6 @@ func get_color_challenge(a, b):
 	var a_count = 0
 	var b_count = 0
 	
-	print(a, " ", b)
 	for x in a:
 		if b.find(x) == -1:
 			res.append([0, x])
