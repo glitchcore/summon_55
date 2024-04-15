@@ -104,7 +104,7 @@ vec4 fire(vec2 uv, float t, vec3 texture) {
 	float soft_cloud = clamp(cloud_v * 1.5, 0., 1.) * cloud_mask * cloud_amount;
 	
 	float inner = smoothstep(0.5, 0.9, texture.g);
-	float outer = 1. - smoothstep(thickness, 0.85, texture.r);
+	float outer = 1. - smoothstep(thickness, 0.9, texture.r);
 	
 	float contour = texture.g * (1. - inner);
 	
